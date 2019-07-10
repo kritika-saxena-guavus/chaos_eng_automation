@@ -1,5 +1,6 @@
 dateparser
 kubernetes
 logzero
+chaostoolkit
 chaostoolkit-lib>=0.20.0
 pyyaml
