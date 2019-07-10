@@ -1,0 +1,73 @@
+{
+	"version": "1.0.0",
+	"title": "What is the impact on an ES service when the ES running pod goes down?",
+	"description": "If ES running pod goes down, the ES service should still be functioning properly.",
+	"tags": ["kubernetes"],
+	"controls": [{
+        "name": "my-controls",
+        "provider": {
+            "type": "python",
+            "module": "mypackage.custom.controllers.control"
+        }
+  }],
+	"steady-state-hypothesis": {
+		"title": "Application responds",
+		"probes": [{
+      "type": "probe",
+      "name": "{{pod_name}}_pod_is_running",
+      "tolerance": true,
+		  "provider": {
+        "module": "chaosk8s.pod.probes",
+        "type": "python",
+        "func": "pods_in_phase",
+        "arguments": {
+          "ns": "{{pod_ns_var}}",
+          "phase" : "Running",
+          "label_selector" : "{{pod_label_selector_var}}"
+        }
+      }
+		},
+		{
+      "type": "probe",
+      "name": "{{service_name}}_service_exists",
+      "tolerance": true,
+		  "provider": {
+        "module": "chaosk8s.probes",
+        "type": "python",
+        "func": "service_endpoint_is_initialized",
+        "arguments": {
+          "name": "{{service_name}}",
+          "ns": "{{service_ns_var}}",
+          "label_selector" : "{{service_label_selector_var}}"
+        }
+      }
+		}]
+	},
+	"method": [{
+    "type": "action",
+    "name": "terminate_gracefully_pod_{{pod_name}}",
+    "provider": {
+      "module": "chaosk8s.pod.actions",
+      "type": "python",
+      "func": "terminate_pods",
+      "arguments": {
+        "name_pattern": "{{pod_name}}*",
+        "ns": "{{pod_ns_var}}",
+        "grace_period": 5
+			}
+    }
+  },
+  {
+    "type": "probe",
+    "name": "read_new_spawned_logs_for_pod_{{pod_name}}",
+    "provider": {
+      "module": "chaosk8s.pod.probes",
+      "type": "python",
+      "func": "read_pod_logs",
+      "arguments": {
+        "ns": "{{pod_ns_var}}",
+        "label_selector" : "{{pod_label_selector_var}}"
+      }
+    }
+  }]
+}
