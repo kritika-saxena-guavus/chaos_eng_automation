@@ -156,6 +156,7 @@ the rules of the DCO before submitting a PR.
 
 ## Execution steps
 
+```
 root@testautomation-mgt-01 ~]# mkdir chaos_automation_folder
 [root@testautomation-mgt-01 ~]# cd chaos_automation_folder
 [root@testautomation-mgt-01 chaos_automation_folder]# git clone https://github.com/kritika-saxena-guavus/chaos_engineering_automation.git
@@ -203,3 +204,36 @@ Switched to a new branch 'AUT-542'
 -rw-r--r--. 1 root root 26460 Jul 11 07:07 kubernetes_journal.json
 
 -rw-r--r--. 1 root root 42779 Jul 11 07:07 kubernetes_output.txt
+```
+
+## Workarounds incorporated
+
+1) fabric utils  as a class not supported in python provider, so made it a module.
+
+2) Installed nimble seperately in virtualenv after instialzing the project in virtualenv with command `python setup.py develop` as it will fails on python 2 syntactical errors.
+
+3) Chaostoolkit supported in 3.x and nimble currently in python 2. Fabric1.x provided in nimble is not supported in python 3. Hence used fabric3 instead. Fabric3 is compatible with python. After installing nimble,  uninstall fabric and install fabric3.
+
+4) Set `encoding="utf-8"` in Shellutils.execute_shell_command() for python3.
+
+5) Dependencies issues with running `chaos report`  command on centos7. Issues were on Mac as well, there it got resolved with below steps.
+
+```
+pip install cairocffi  --- already satisfied
+
+brew uninstall py2cairo   --- this will not install properly but one of its dependencies will get installed successfully. 'i.e'  "cairo"
+
+export PKG_CONFIG_PATH="/usr/local/opt/libffi/lib/pkgconfig"
+
+pip install pycairo
+
+export LC_ALL=en_US.UTF-8
+
+export LANG=en_US.UTF-8
+
+brew install pandoc
+
+chaos report --export-format=html5 journal.json report.html
+
+open report.html
+```

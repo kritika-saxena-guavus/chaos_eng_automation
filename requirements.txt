@@ -3,4 +3,5 @@ kubernetes
 logzero
 chaostoolkit
 chaostoolkit-lib
+chaostoolkit-reporting
 pyyaml
