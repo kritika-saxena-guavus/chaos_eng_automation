@@ -1,7 +1,7 @@
 {
 	"version": "1.0.0",
-	"title": "What is the impact on an ES service when the ES running pod goes down?",
-	"description": "If ES running pod goes down, the ES service should still be functioning properly.",
+	"title": "Does kubernetes handle pod {{pod_name}} failover?",
+	"description": "If the pod {{pod_name}} goes down, then kubenetes should handle its restart garcefully and the service it is running should get restored successfully.",
 	"tags": ["kubernetes"],
 	"controls": [{
         "name": "my-controls",
@@ -11,7 +11,7 @@
         }
   }],
 	"steady-state-hypothesis": {
-		"title": "Application responds",
+		"title": "Pod {{pod_name}} and its service {{service_name}} is up and running",
 		"probes": [{
       "type": "probe",
       "name": "{{pod_name}}_pod_is_running",

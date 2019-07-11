@@ -1,7 +1,7 @@
 {
 	"version": "1.0.0",
-	"title": "What is the impact on an ES service when the ES running pod goes down?",
-	"description": "If ES running pod goes down, the ES service should still be functioning properly.",
+	"title": "Experiment running shell commands on local and remote",
+	"description": "Shell command should get successfully executed on remote using python provider through fabric and on local it should run through process provider",
 	"tags": ["kubernetes"],
   	"controls": [{
         "name": "my-controls",
@@ -11,10 +11,10 @@
         }
   }],
 	"steady-state-hypothesis": {
-		"title": "Application responds",
+		"title": "Shell command runs on remote server",
 		"probes": [{
       "type": "probe",
-      "name": "test_run_remote_python_cmd",
+      "name": "run_shell_cmd_on_remote",
       "tolerance": "Hi",
           "provider": {
         "module": "mypackage.custom.fabric_utils",
@@ -33,7 +33,7 @@
 	},
 	"method": [{
     "type": "action",
-    "name": "test_method",
+    "name": "run_shell_cmd_on_local",
     "provider": {
       "module": "chaosk8s.pod.actions",
       "type": "process",
