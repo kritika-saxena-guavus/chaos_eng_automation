@@ -185,3 +185,14 @@ Switched to a new branch 'AUT-542'
 (venv) [root@testautomation-mgt-01 chaos_engineering_automation]# python mypackage/runner_process.py 
 
 (venv) [root@testautomation-mgt-01 chaos_engineering_automation]# python mypackage/kubernetes_process.py 
+
+(venv) [root@testautomation-mgt-01 chaos_engineering_automation]# ls -ltr target/artifacts/
+total 132
+-rw-r--r--. 1 root root  1249 Jul 11 07:05 process_experiment.json
+-rw-r--r--. 1 root root  6967 Jul 11 07:05 process_chaostoolkit.log
+-rw-r--r--. 1 root root  4622 Jul 11 07:05 process_journal.json
+-rw-r--r--. 1 root root  3592 Jul 11 07:05 process_output.txt
+-rw-r--r--. 1 root root  2426 Jul 11 07:06 kubernetes_experiment.json
+-rw-r--r--. 1 root root 29482 Jul 11 07:07 kubernetes_chaostoolkit.log
+-rw-r--r--. 1 root root 26460 Jul 11 07:07 kubernetes_journal.json
+-rw-r--r--. 1 root root 42779 Jul 11 07:07 kubernetes_output.txt
