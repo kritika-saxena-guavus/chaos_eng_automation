@@ -153,3 +153,35 @@ into the master branch of the repository. Please, make sure you can abide by
 the rules of the DCO before submitting a PR.
 
 [dco]: https://github.com/probot/dco#how-it-works
+
+## Execution steps
+
+root@testautomation-mgt-01 ~]# mkdir chaos_automation_folder
+[root@testautomation-mgt-01 ~]# cd chaos_automation_folder
+[root@testautomation-mgt-01 chaos_automation_folder]# git clone https://github.com/kritika-saxena-guavus/chaos_engineering_automation.git
+[root@testautomation-mgt-01 chaos_automation_folder]# cd chaos_engineering_automation/
+[root@testautomation-mgt-01 chaos_engineering_automation]# git branch
+* master
+
+[root@testautomation-mgt-01 chaos_engineering_automation]# git checkout AUT-542
+Branch AUT-542 set up to track remote branch AUT-542 from origin.
+Switched to a new branch 'AUT-542'
+
+
+[root@testautomation-mgt-01 chaos_engineering_automation]# cd ../
+
+[root@testautomation-mgt-01 chaos_automation_folder]# virtualenv --python=python3 venv
+
+(venv) [root@testautomation-mgt-01 chaos_engineering_automation]# pip install -r requirements.txt
+
+(venv) [root@testautomation-mgt-01 chaos_engineering_automation]# python setup.py develop
+
+(venv) [root@testautomation-mgt-01 chaos_engineering_automation]# pip install nimble  --extra-index-url http://192.168.192.201:5050/simple/ --trusted-host 192.168.192.201
+
+(venv) [root@testautomation-mgt-01 chaos_engineering_automation]# pip uninstall fabric
+
+(venv) [root@testautomation-mgt-01 chaos_engineering_automation]# pip install fabric3
+
+(venv) [root@testautomation-mgt-01 chaos_engineering_automation]# python mypackage/runner_process.py 
+
+(venv) [root@testautomation-mgt-01 chaos_engineering_automation]# python mypackage/kubernetes_process.py 
