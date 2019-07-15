@@ -15,7 +15,7 @@
 		"probes": [{
       "type": "probe",
       "name": "run_shell_cmd_on_remote",
-      "tolerance": "Hi",
+      "tolerance": "{{expected_remote_command_output}}",
           "provider": {
         "module": "mypackage.custom.fabric_utils",
         "type": "python",

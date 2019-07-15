@@ -14,6 +14,7 @@ variables = {"remote_command_var": "echo Hi",
                 "remote_password_var": "guavus@123",
                 "remote_command_timeout_var": 120,
                 "remote_connection_timeout_var": 120,
+                "expected_remote_command_output" : "Hi",
                 "local_command_var": "ls",
                 "local_command_arguments": "/tmp"
                 }
