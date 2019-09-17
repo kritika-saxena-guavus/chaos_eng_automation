@@ -55,7 +55,7 @@ def kill_process(process_name, component, num_of_nodes=None):
 
 
 @retry(stop_max_delay=NODE_PING_TIMEOUT, wait_fixed=5000, retry_on_result=_query_node_status())
-def check_noode_is_up(node_alias):
+def check_node_is_up(node_alias):
     return not ("Request timeout" in ShellUtils.execute_shell_command(ShellUtils.ping(node_alias, count=5)).stdout)
 
 
