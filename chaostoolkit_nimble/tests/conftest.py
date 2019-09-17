@@ -41,7 +41,7 @@ def initialize_node_obj(request):
     testbed_file = request.config.getoption("--testbed")
     component_arttributes_file = request.config.getoption("--componentAttributesConfig")
     if not component_arttributes_file:
-        component_arttributes_file = "nimble/resources/components/component_attributes.yml"
+        component_arttributes_file = "chaostoolkit_nimble/resources/components/component_attributes.yml"
     setup_files_base_path = "%s/setup" % global_constants.DEFAULT_LOCAL_TMP_PATH
     if testbed_file:
         NodeManager.initialize(testbed_file, component_arttributes_file)
