@@ -1,4 +1,3 @@
-import logging
 import random
 
 from logzero import logger
@@ -8,8 +7,6 @@ from chaostoolkit_nimble.core.exceptions.custom_exceptions import ChaosActionFai
 from nimble.core.entity.components import Components
 from nimble.core.entity.node_manager import NodeManager
 from nimble.core.utils.shell_utils import ShellUtils
-
-_LOGGER = logging.getLogger(__name__)
 
 NODE_PING_TIMEOUT = 90000
 
