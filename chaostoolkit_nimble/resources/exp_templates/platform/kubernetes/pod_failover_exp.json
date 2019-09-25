@@ -2,9 +2,9 @@
 	"version": "1.0.0",
 	"title": "Does kubernetes handle pods' failover?",
 	"description": "If one of the pods with label selector '{{pod_label_selector}}' goes down, then kubenetes should handle its restart garcefully.",
-	"tags": ["kubernetes"],
+	"tags": ["kubernetes", "platform"],
 	"controls": [{
-		"name": "my-controls",
+		"name": "kubernetes-related-controls",
 		"provider": {
 			"type": "python",
 			"module": "chaostoolkit_nimble.controllers.platform.kubernetes.control"

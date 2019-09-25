@@ -9,7 +9,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 @pytest.mark.incremental
-class TestSampleKubernetes():
+class TestKubernetesResiliency():
 
     @pytest.fixture(scope="session")
     def kubernetes_rest_client_utils(self):

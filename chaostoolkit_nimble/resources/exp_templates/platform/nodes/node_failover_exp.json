@@ -1,51 +1,42 @@
 {
-  "version": "1.0.0",
-  "title": "Experiment with killing a process on system",
-  "description": "The process should auto-respawn after being killed.",
-  "tags": [
-    "process"
-  ],
-  "controls": [
-    {
-      "name": "process-related-controls",
-      "provider": {
-        "type": "python",
-        "module": "chaostoolkit_nimble.controllers.base.control"
-      }
-    }
-  ],
-  "steady-state-hypothesis": {
-    "title": "Process {{rand_dynamic_process_name}} is up and running",
-    "probes": [
-      {
-        "type": "probe",
-        "name": "Check node {{node_alias}} is up and pingable",
-        "tolerance": true,
-        "provider": {
-          "module": "chaostoolkit_nimble.core.utils.ha_utils",
-          "type": "python",
-          "func": "check_node_is_up",
-          "arguments": {
-            "node_alias": "{{node_alias}}"
-          }
-        }
-      }
-    ]
-  },
-  "method": [
-    {
-      "type": "action",
-      "name": "Bring node {{node_alias}} down",
-      "provider": {
-        "module": "chaostoolkit_nimble.core.utils.ha_utils",
-        "type": "python",
-        "func": "reboot_node",
-        "arguments": {
-          "node_alias": "{{node_alias}}"
-        }
-      }
-    }
-  ],
-  "rollbacks": [
-    ]
+	"version": "1.0.0",
+	"title": "Experiment with bringing an active node down on the cluster.",
+	"description": "The node should get restored back to a pingable state again.",
+	"tags": ["node", "platform"],
+	"controls": [{
+		"name": "base-controls",
+		"provider": {
+			"type": "python",
+			"module": "chaostoolkit_nimble.controllers.base.control"
+		}
+	}],
+	"steady-state-hypothesis": {
+		"title": "Check node '{{node_alias}}' is up and pingable.",
+		"probes": [{
+			"type": "probe",
+			"name": "Check node '{{node_alias}}' is up and pingable.  ",
+			"tolerance": true,
+			"provider": {
+				"module": "chaostoolkit_nimble.core.utils.ha_utils",
+				"type": "python",
+				"func": "check_node_is_up",
+				"arguments": {
+					"node_alias": "{{node_alias}}"
+				}
+			}
+		}]
+	},
+	"method": [{
+		"type": "action",
+		"name": "Reboot node '{{node_alias}}'.  ",
+		"provider": {
+			"module": "chaostoolkit_nimble.core.utils.ha_utils",
+			"type": "python",
+			"func": "reboot_node",
+			"arguments": {
+				"node_alias": "{{node_alias}}"
+			}
+		}
+	}],
+	"rollbacks": []
 }
