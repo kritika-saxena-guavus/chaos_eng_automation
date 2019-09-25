@@ -1,0 +1,70 @@
+{
+	"version": "1.0.0",
+	"title": "Does kubernetes handle pods' failover?",
+	"description": "If one of the pods with label selector '{{pod_label_selector}}' goes down, then kubenetes should handle its restart garcefully.",
+	"tags": ["kubernetes"],
+	"controls": [{
+		"name": "my-controls",
+		"provider": {
+			"type": "python",
+			"module": "chaostoolkit_nimble.controllers.platform.kubernetes.control"
+		}
+	}],
+	"secrets": {
+		"kubernetes": {
+			"KUBERNETES_HOST": "{{kubernetes_host}}",
+			"KUBERNETES_API_KEY_PREFIX": "Bearer",
+			"KUBERNETES_API_KEY": "{{kubernetes_api_key}}"
+		}
+	},
+	"steady-state-hypothesis": {
+		"title": "Pods with matching label selector '{{pod_label_selector}}' are up and running",
+		"probes": [{
+			"type": "probe",
+			"name": "Check pods with matching label selector '{{pod_label_selector}}' are in Running state",
+			"tolerance": true,
+			"provider": {
+				"module": "chaostoolkit_nimble.core.extensions.chaosk8s.pod.probes",
+				"type": "python",
+				"func": "pods_in_phase",
+				"secrets": ["kubernetes"],
+				"arguments": {
+					"ns": "{{namespace}}",
+					"phase": "Running",
+					"label_selector": "{{pod_label_selector}}"
+				}
+			}
+		}]
+	},
+	"method": [{
+			"type": "action",
+			"name": "Terminate gracefully one pod with label selector '{{pod_label_selector}}'  ",
+			"provider": {
+				"module": "chaostoolkit_nimble.core.extensions.chaosk8s.pod.actions",
+				"type": "python",
+				"func": "terminate_pods",
+				"secrets": ["kubernetes"],
+				"arguments": {
+                    "label_selector": "{{pod_label_selector}}",
+					"ns": "{{pod_ns_var}}",
+					"grace_period": 5
+				}
+			}
+		},
+		{
+			"type": "probe",
+			"name": "Read logs for newly spawned pod with label selector '{{pod_label_selector}}'  ",
+			"provider": {
+				"module": "chaostoolkit_nimble.core.extensions.chaosk8s.pod.probes",
+				"type": "python",
+				"func": "read_pod_logs",
+				"secrets": ["kubernetes"],
+				"arguments": {
+					"ns": "{{namespace}}",
+					"label_selector": "{{pod_label_selector}}"
+				}
+			}
+		}
+	],
+	"rollbacks": []
+}

@@ -1,8 +1,12 @@
-import time
 from typing import List
 
 from chaoslib.types import Configuration, \
     Experiment, Run, Secrets, Activity
+from logzero import logger
+
+from chaostoolkit_nimble.controllers.base import control
+
+control.configure_control()
 
 
 def after_activity_control(context: Activity, state: Run,
@@ -16,8 +20,9 @@ def after_activity_control(context: Activity, state: Run,
     https://docs.chaostoolkit.org/reference/api/journal/#run for more
     information.
     """
-    print("----------------STATE AFTER ACTIVITY:  %s" %state)
-    
+    logger.debug("----------------STATE AFTER ACTIVITY:  %s" % state)
+
+
 def after_method_control(context: Experiment, state: List[Run],
                          configuration: Configuration = None,
                          secrets: Secrets = None, **kwargs):
@@ -29,12 +34,11 @@ def after_method_control(context: Experiment, state: List[Run],
     https://docs.chaostoolkit.org/reference/api/journal/#run for more
     information.
     """
-    print("----------------STATE AFTER METHOD:  %s" % state)
+    logger.debug("----------------STATE AFTER METHOD:  %s" % state)
     for run in state:
         activity_obj = run["activity"]
         activity_name = activity_obj["name"]
         run_status = run["status"]
-        if "terminate_gracefully_pod_" in activity_name and run_status == "succeeded":
-            time.sleep(60)
-        elif "read_new_spawned_logs_for_pod" in activity_name and run_status == "succeeded":
-            print(run["output"].keys())
+        if "Read logs" in activity_name and run_status == "succeeded":
+            for pod, logs in run["output"].items():
+                logger.debug("==========Fetched logs for pod '%s': %s" % (pod, logs))

@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
-  "title": "Experiment with killing the spark driver for the spark job {{job_name}}.",
-  "description": "The spark driver should get auto-respawned after being killed.",
+  "title": "Experiment with killing n number of spark executors for a spark job {{job_name}}.",
+  "description": "The spark executor process/es should get auto-respawned after being killed.",
   "tags": [
     "spark"
   ],
@@ -10,7 +10,7 @@
       "name": "spark-related-controls",
       "provider": {
         "type": "python",
-        "module": "chaostoolkit_nimble.controllers.spark.control"
+        "module": "chaostoolkit_nimble.controllers.application.spark.control"
       }
     }
   ],
@@ -35,13 +35,14 @@
   "method": [
     {
       "type": "action",
-      "name": "Kill spark driver for job {{job_name}}.  ",
+      "name": "Kill active spark executors for job {{job_name}}.  ",
       "provider": {
         "module": "chaostoolkit_nimble.core.utils.spark_apps_ha_utils",
         "type": "python",
-        "func": "kill_driver",
+        "func": "kill_active_executors",
         "arguments": {
-          "job_name": "{{job_name}}"
+          "job_name": "{{job_name}}",
+          "num_of_exec": "{{ num_of_exec_to_kill|default('1') }}"
         }
       }
     }

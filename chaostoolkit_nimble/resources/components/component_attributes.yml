@@ -58,4 +58,6 @@ components:
     ui_port: 3000
   HADOOP_YARN:
     ui_port: 8088
+  KUBERNETES:
+    application_port: 8383
 

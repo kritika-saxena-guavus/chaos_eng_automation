@@ -3,7 +3,7 @@ import random
 from logzero import logger
 from retrying import RetryError
 
-from chaostoolkit_nimble.controllers.spark import control
+from chaostoolkit_nimble.controllers.application.spark import control
 from chaostoolkit_nimble.core.exceptions.custom_exceptions import ChaosActionFailedError
 from nimble.core.adapters.hadoop.base_hadoop_adapter import ApplicationState
 from nimble.core.entity.node_manager import NodeManager

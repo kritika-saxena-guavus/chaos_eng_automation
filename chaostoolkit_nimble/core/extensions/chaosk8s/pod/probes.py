@@ -92,6 +92,7 @@ def pods_in_phase(label_selector: str, phase: str = "Running",
 
     v1 = client.CoreV1Api(api)
     if label_selector:
+        logger.debug("---------------------INSIDE pods_in_phase")
         ret = v1.list_namespaced_pod(ns, label_selector=label_selector)
         logger.debug("Found {d} pods matching label '{n}' in ns '{s}'".format(
             d=len(ret.items), n=label_selector, s=ns))

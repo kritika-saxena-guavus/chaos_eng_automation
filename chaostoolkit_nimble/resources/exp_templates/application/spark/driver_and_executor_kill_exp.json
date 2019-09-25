@@ -10,7 +10,7 @@
       "name": "spark-related-controls",
       "provider": {
         "type": "python",
-        "module": "chaostoolkit_nimble.controllers.spark.control"
+        "module": "chaostoolkit_nimble.controllers.application.spark.control"
       }
     }
   ],
