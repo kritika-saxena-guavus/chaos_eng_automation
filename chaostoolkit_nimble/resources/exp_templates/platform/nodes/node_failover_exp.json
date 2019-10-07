@@ -2,7 +2,10 @@
 	"version": "1.0.0",
 	"title": "Experiment with bringing an active node down on the cluster.",
 	"description": "The node should get restored back to a pingable state again.",
-	"tags": ["node", "platform"],
+	"tags": [
+		"node",
+		"platform"
+	],
 	"controls": [{
 		"name": "base-controls",
 		"provider": {
@@ -11,26 +14,37 @@
 		}
 	}],
 	"steady-state-hypothesis": {
-		"title": "Check node '{{node_alias}}' is up and pingable.",
+		"title": "Check node '{{node_alias}}' up and all ambari services are up on the cluster.",
 		"probes": [{
-			"type": "probe",
-			"name": "Check node '{{node_alias}}' is up and pingable.  ",
-			"tolerance": true,
-			"provider": {
-				"module": "chaostoolkit_nimble.core.utils.ha_utils",
-				"type": "python",
-				"func": "check_node_is_up",
-				"arguments": {
-					"node_alias": "{{node_alias}}"
+				"type": "probe",
+				"name": "Check node '{{node_alias}}' is up and pingable.  ",
+				"tolerance": true,
+				"provider": {
+					"module": "chaostoolkit_nimble.core.utils.platform.node_utils",
+					"type": "python",
+					"func": "is_node_up_and_running",
+					"arguments": {
+						"node_alias": "{{node_alias}}"
+					}
+				}
+			},
+			{
+				"type": "probe",
+				"name": "Check all ambari services are up on the cluster.   ",
+				"tolerance": true,
+				"provider": {
+					"module": "chaostoolkit_nimble.core.utils.platform.ambari_utils",
+					"type": "python",
+					"func": "are_services_running"
 				}
 			}
-		}]
+		]
 	},
 	"method": [{
 		"type": "action",
 		"name": "Reboot node '{{node_alias}}'.  ",
 		"provider": {
-			"module": "chaostoolkit_nimble.core.utils.ha_utils",
+			"module": "chaostoolkit_nimble.core.utils.platform.node_utils",
 			"type": "python",
 			"func": "reboot_node",
 			"arguments": {

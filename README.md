@@ -339,7 +339,7 @@ pip install pycairo
 brew install pandoc
 ```
 
-```
+
 # Chaos Toolkit Kubernetes Support
 
 [![Build Status](https://travis-ci.org/chaostoolkit/chaostoolkit-kubernetes.svg?branch=master)](https://travis-ci.org/chaostoolkit/chaostoolkit-kubernetes)
@@ -357,7 +357,7 @@ environment where [chaostoolkit][] already lives.
 
 [chaostoolkit]: https://github.com/chaostoolkit/chaostoolkit
 
-```
+
 $ pip install chaostoolkit-kubernetes
 ```
 
