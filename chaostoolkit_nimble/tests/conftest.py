@@ -6,8 +6,6 @@ import os
 import pytest
 
 from nimble.core import global_constants
-from nimble.core.entity.components import Components
-from nimble.core.security.kerberos_authentication import KerberosAuthentication
 from nimble.core.utils.shell_utils import ShellUtils
 
 try:
@@ -99,16 +97,6 @@ def user_actions(config_parser, dump_allure_env_file):  # pylint: disable=redefi
     :rtype: :class:`nimble.actions.base.flows.user_actions.UserActions`
     """
     return UserActions(config_parser)
-
-
-@pytest.fixture(scope="session", autouse=True)
-def get_kerberos(initialize_node_obj):
-    if NodeManager.node_obj.kerberized:
-        kerberos_authentication = KerberosAuthentication()
-        namenode_node = NodeManager.node_obj.get_node_aliases_by_component(Components.NAMENODE.name)[0]
-        component_attributes = NodeManager.node_obj.component_attributes_dict[Components.HDFS.name]
-        kerberos_authentication.generate_kerberos_ticket(namenode_node,
-                                                         component_attributes.keytab_file_path)
 
 
 def pytest_runtest_makereport(item, call):
