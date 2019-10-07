@@ -35,7 +35,7 @@
 				"provider": {
 					"module": "chaostoolkit_nimble.core.utils.platform.ambari_utils",
 					"type": "python",
-					"func": "are_services_running"
+					"func": "are_all_services_running"
 				}
 			}
 		]

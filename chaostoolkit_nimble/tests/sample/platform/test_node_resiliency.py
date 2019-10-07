@@ -74,6 +74,7 @@ class TestNodeResiliency():
         hadoop_cli_utils.remove(hdfs_path, recursive=True)
         hive_utils.drop_database(self.input_db)
 
+
     def test_node_failover(self, send_data_to_hive):
         # pylint: disable=unused-argument
         exp_template_file = OPTIONS_DICT["experimentsPath"]
