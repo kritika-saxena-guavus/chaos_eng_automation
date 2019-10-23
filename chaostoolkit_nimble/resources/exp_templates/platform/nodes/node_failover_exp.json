@@ -1,7 +1,7 @@
 {
 	"version": "1.0.0",
 	"title": "Experiment with bringing an active node down on the cluster.",
-	"description": "The node should get restored back to a pingable state again.",
+	"description": "The node should get restored back to a pingable state, ambari services should get restored and the data in a hive table should remain intact. ",
 	"tags": [
 		"node",
 		"platform"
@@ -14,7 +14,7 @@
 		}
 	}],
 	"steady-state-hypothesis": {
-		"title": "Check node '{{node_alias}}' up, all ambari services are up and the all data in a hive table is intact",
+		"title": "Check node '{{node_alias}}' up, all ambari services are up and the all data in a hive table remains intact",
 		"probes": [{
 				"type": "probe",
 				"name": "Check node '{{node_alias}}' is up and pingable.  ",
@@ -40,7 +40,7 @@
 			},
 			{
                 "type": "probe",
-                "name": "Check that all the data in a hive table is intact.   ",
+                "name": "Check that all the data in a hive table remains intact.   ",
                 "tolerance": true,
                 "provider": {
                     "module": "chaostoolkit_nimble.actions.base.flows.chaos_user_actions",
