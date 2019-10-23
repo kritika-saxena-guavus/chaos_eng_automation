@@ -9,7 +9,6 @@ from nimble.core.entity.components import Components
 from nimble.core.entity.node_manager import NodeManager
 from nimble.core.utils.components.hadoop_utils import HadoopCliUtils
 from nimble.core.utils.components.hive_utils import HiveBeelineUtils, HivePythonClientUtils
-from nimble.core.utils.dynamic_substitution_utils import DynamicSubstitutionUtils
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -47,23 +46,13 @@ class TestNodeResiliency():
         hadoop_cli_utils.remove(hdfs_path, recursive=True)
         hive_utils.drop_database(self.input_db)
 
-    def test_validate_pre_chaos(self, user_actions, sample_actions, send_data_to_hive):
+    def test_node_failover(self, send_data_to_hive, hive_utils):
         # pylint: disable=unused-argument
-        DynamicSubstitutionUtils.add({"randynamic_db_name": self.input_db})
-        DynamicSubstitutionUtils.add({"randynamic_table_name": self.input_table})
-        user_actions.validate(sample_actions.validate_hive_to_hive, self.job_alias)
-
-    def test_node_failover(self, send_data_to_hive):
-        # pylint: disable=unused-argument
-        exp_template_file = OPTIONS_DICT["experimentsPath"]
-        # exp_template_file = "target/artifacts/tmp/exp_templates/node_failover_exp.json"
         node_alias = NodeManager.node_obj.get_node_aliases_by_component(Components.DATANODE.name)[0]
-        context = {"node_alias": node_alias}
-        # chaos_user_actions.run_experiment(exp_template_file=exp_template_file, context=context)
+        entity_alias = "hive"
+        output_alias = "hive_output"
+        actual_output = hive_utils.select("SELECT * from %s.%s" % (self.input_db, self.input_table)).stdout
+        chaos_user_actions.regression_actions.dump_actual_output(actual_output, entity_alias, output_alias)
+        context = {"node_alias": node_alias, "expected_file_server_path": "automation/chaos/golden_data/hive/",
+                   "entity_alias": entity_alias, "output_alias": output_alias}
         chaos_user_actions.run_experiment(custom_exp_template_file=OPTIONS_DICT["experimentsPath"], context=context)
-
-    def test_validate_post_chaos(self, user_actions, sample_actions, send_data_to_hive):
-        # pylint: disable=unused-argument
-        DynamicSubstitutionUtils.add({"randynamic_db_name": self.input_db})
-        DynamicSubstitutionUtils.add({"randynamic_table_name": self.input_table})
-        user_actions.validate(sample_actions.validate_hive_to_hive, self.job_alias, dataset_alias="dataset2")

@@ -7,14 +7,14 @@
 		"platform"
 	],
 	"controls": [{
-		"name": "base-controls",
+		"name": "node-controls",
 		"provider": {
 			"type": "python",
-			"module": "chaostoolkit_nimble.controllers.base.control"
+			"module": "chaostoolkit_nimble.controllers.platform.nodes.control"
 		}
 	}],
 	"steady-state-hypothesis": {
-		"title": "Check node '{{node_alias}}' up and all ambari services are up on the cluster.",
+		"title": "Check node '{{node_alias}}' up, all ambari services are up and the all data in a hive table is intact",
 		"probes": [{
 				"type": "probe",
 				"name": "Check node '{{node_alias}}' is up and pingable.  ",
@@ -37,7 +37,22 @@
 					"type": "python",
 					"func": "are_all_services_running"
 				}
-			}
+			},
+			{
+                "type": "probe",
+                "name": "Check that all the data in a hive table is intact.   ",
+                "tolerance": true,
+                "provider": {
+                    "module": "chaostoolkit_nimble.actions.base.flows.chaos_user_actions",
+                    "type": "python",
+                    "func": "regress",
+                    "arguments": {
+                        "expected_file_server_path": "{{expected_file_server_path}}",
+                        "entity_alias": "{{entity_alias}}",
+                        "output_alias": "{{output_alias}}"
+                    }
+                }
+            }
 		]
 	},
 	"method": [{

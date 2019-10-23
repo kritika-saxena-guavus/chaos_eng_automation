@@ -1,7 +1,6 @@
 import random
 
 from logzero import logger
-from retrying import retry
 
 from chaostoolkit_nimble.core.exceptions.custom_exceptions import ChaosActionFailedError
 from nimble.core.entity.components import Components
@@ -49,12 +48,3 @@ def kill_process(process_name, component, num_of_nodes=None):
             raise ChaosActionFailedError("Could not kill process '%s' on node '%s'" % (process_name, node_alias))
         response_list.append(response)
     return str(response_list)
-
-
-@retry(stop_max_delay=NODE_PING_TIMEOUT, wait_fixed=5000, retry_on_result=_query_node_status())
-def check_node_is_up(node_alias):
-    return not ("Request timeout" in ShellUtils.execute_shell_command(ShellUtils.ping(node_alias, count=5)).stdout)
-
-
-def reboot_node(node_alias):
-    return str(NodeManager.node_obj.execute_command_on_node(node_alias, ShellUtils.reboot(force=True)))
