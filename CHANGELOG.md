@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+#### Added
+- Support for bringing a node down and validating that all ambari services are restored.
 
 ## [0.0.1]: 2019-08-23
 #### Added
