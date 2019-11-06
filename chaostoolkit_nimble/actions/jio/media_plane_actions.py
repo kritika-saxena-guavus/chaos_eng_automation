@@ -41,8 +41,8 @@ class MediaPlaneActions(object):
         kwargs["base_path"] = job_config_file
         kwargs["file_format"] = "json"
         kwargs["components"] = [Components.MANAGEMENT.name]
-        kwargs["properties"] = {"mediaPlaneRawInput.type": "csv", "mediaPlaneRawInput.header": "true",
-                                "mediaPlaneRawInput.pathPrefix": "/tmp/partition_date=",
+        kwargs["properties"] = {"mediaPlaneRawInput.type": "hive",
+                                "sqlPrefix": "select * from network.probes_mediaplane_v1_po where " ,
                                 "mediaPlaneProcessedOutput.tableName": "%s.%s" % (self.database_name, self.table_name)}
         self.config_actions.update_configs(**kwargs)
 
@@ -53,12 +53,12 @@ class MediaPlaneActions(object):
                                                                                                     job_script_file))
         NodeManager.node_obj.execute_command_on_node(self.node_alias,
                                                      ShellUtils.find_and_replace_whole_line_in_file("lastdayepoch=",
-                                                                                                    """lastdayepoch=`date -d "2019-07-20 05:30:00" +%s`""",
+                                                                                                    """lastdayepoch=`date -d "2019-09-24 05:30:00" +%s`""",
                                                                                                     job_script_file))
         NodeManager.node_obj.execute_command_on_node(self.node_alias, ShellUtils.find_and_replace_in_file(
-            "--timeIncrementInFilesInMin=15", "--timeIncrementInFilesInMin=15", job_script_file))
+            "--timeIncrementInFilesInMin=15", "--timeIncrementInFilesInMin=1440", job_script_file))
         NodeManager.node_obj.execute_command_on_node(self.node_alias, ShellUtils.find_and_replace_in_file(
-            "--durationOfDataToProcessInMin=15", "--durationOfDataToProcessInMin=15", job_script_file))
+            "--durationOfDataToProcessInMin=15", "--durationOfDataToProcessInMin=120", job_script_file))
         ############# Run job on management node
         job_run_command = "export SPARK_HOME=/usr/hdp/2.6.5.0-292/spark2 && cd %s && nohup scripts/media_plane_microapp1.sh >> %s 2>>%s &" % (
             self.job_base_directory, self.job_stdout_file, self.job_stdout_file)

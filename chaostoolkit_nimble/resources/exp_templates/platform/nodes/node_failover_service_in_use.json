@@ -1,0 +1,58 @@
+{
+	"version": "1.0.0",
+	"title": "Experiment with bringing an active node down on the cluster when hive service on the cluster is being used to write data on the cluster.",
+	"description": "Bringing the node down while the hive service is being used to write data on the cluster should have no impact on the data.",
+	"tags": [
+		"node",
+		"platform"
+	],
+	"controls": [{
+		"name": "node-controls",
+		"provider": {
+			"type": "python",
+			"module": "chaostoolkit_nimble.controllers.platform.nodes.service_in_use_control"
+		}
+	}],
+	"steady-state-hypothesis": {
+		"title": "Check all ambari services are up on the cluster and the all data in a hive table remains intact",
+		"probes": [{
+				"type": "probe",
+				"name": "Check all ambari services are up on the cluster.   ",
+				"tolerance": true,
+				"provider": {
+					"module": "chaostoolkit_nimble.core.utils.ambari_ha_utils",
+					"type": "python",
+					"func": "are_all_services_running"
+				}
+			}
+
+		]
+	},
+	"method": [{
+		"type": "action",
+		"name": "Start dumping data into a hive table.  ",
+		"provider": {
+			"module": "chaostoolkit_nimble.actions.sample.sample_application_actions",
+			"type": "python",
+			"func": "import_data_to_hive",
+			"arguments": {
+				"db_name": "{{db_name}}",
+				"table_name": "{{table_name}}",
+				"fileserver_path": "{{fileserver_path}}"
+			}
+		}
+	},
+	{
+		"type": "action",
+		"name": "Reboot node '{{node_alias}}'.  ",
+		"provider": {
+			"module": "chaostoolkit_nimble.core.utils.node_ha_utils",
+			"type": "python",
+			"func": "reboot_node",
+			"arguments": {
+				"node_alias": "{{node_alias}}"
+			}
+		}
+	}],
+	"rollbacks": []
+}

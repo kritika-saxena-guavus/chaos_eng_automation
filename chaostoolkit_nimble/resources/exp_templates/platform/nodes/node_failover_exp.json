@@ -1,7 +1,7 @@
 {
 	"version": "1.0.0",
 	"title": "Experiment with bringing an active node down on the cluster.",
-	"description": "The node should get restored back to a pingable state, ambari services should get restored and the data in a hive table should remain intact. ",
+	"description": "The node should get restored back to a pingable state, all ambari services should get restored and the data already present in the hive table should remain intact. ",
 	"tags": [
 		"node",
 		"platform"
@@ -20,7 +20,7 @@
 				"name": "Check node '{{node_alias}}' is up and pingable.  ",
 				"tolerance": true,
 				"provider": {
-					"module": "chaostoolkit_nimble.core.utils.platform.node_utils",
+					"module": "chaostoolkit_nimble.core.utils.node_ha_utils",
 					"type": "python",
 					"func": "is_node_up_and_running",
 					"arguments": {
@@ -33,7 +33,7 @@
 				"name": "Check all ambari services are up on the cluster.   ",
 				"tolerance": true,
 				"provider": {
-					"module": "chaostoolkit_nimble.core.utils.platform.ambari_utils",
+					"module": "chaostoolkit_nimble.core.utils.ambari_ha_utils",
 					"type": "python",
 					"func": "are_all_services_running"
 				}
@@ -59,7 +59,7 @@
 		"type": "action",
 		"name": "Reboot node '{{node_alias}}'.  ",
 		"provider": {
-			"module": "chaostoolkit_nimble.core.utils.platform.node_utils",
+			"module": "chaostoolkit_nimble.core.utils.node_ha_utils",
 			"type": "python",
 			"func": "reboot_node",
 			"arguments": {

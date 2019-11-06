@@ -1,6 +1,7 @@
 from logzero import logger
 from retrying import retry
 
+from chaostoolkit_nimble.core.utils import spark_ha_utils
 from nimble.core.entity.components import Components
 from nimble.core.entity.node_manager import NodeManager
 from nimble.core.utils.shell_utils import ShellUtils
@@ -32,5 +33,13 @@ def reboot_node(node_alias):
     password = NodeManager.node_obj.nodes[node_alias].password
     command = 'nohup sshpass -p "%s" ssh %s@%s %s' % (password, username, node_ip, ShellUtils.reboot(force=True))
     mgmt_node = NodeManager.node_obj.get_node_aliases_by_component(Components.MANAGEMENT.name)[0]
-    logger.info("Executing command on node %s: %s" % (mgmt_node, command))
+    logger.info("Rebooting node %s: %s" % (node_alias, command))
     return NodeManager.node_obj.execute_remote_command_in_bg(mgmt_node, command)
+
+
+def reboot_spark_executor_node(job_name):
+    executor = spark_ha_utils.get_random_num_executors(job_name, num_of_exec=1)[0]
+    node_hostname_domain = executor["hostPort"].split(":")[0]
+    logger.debug("Executor id running on node '%s': '%s'" % (node_hostname_domain, executor["id"]))
+    node_alias = NodeManager.node_obj.get_node_alias_by_hostname_domain(node_hostname_domain)
+    reboot_node(node_alias)

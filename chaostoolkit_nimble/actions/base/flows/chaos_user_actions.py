@@ -6,6 +6,8 @@ from logzero import logger
 
 from nimble.actions.base.regression.regression_actions import RegressionActions
 from nimble.core import global_constants
+from nimble.core.entity.node_manager import NodeManager
+from nimble.core.utils.components.hadoop_utils import HadoopCliUtils
 from nimble.core.utils.file_server_utils import FileServerUtils
 from nimble.core.utils.shell_utils import ShellUtils
 
@@ -13,6 +15,7 @@ EXPERIMENTS_BASE_PATH = "%s/tmp/experiments/" % global_constants.DEFAULT_LOCAL_A
 ShellUtils.execute_shell_command(ShellUtils.remove_and_create_directory(EXPERIMENTS_BASE_PATH))
 regression_actions = RegressionActions()
 USER_ACTIONS = None
+file_server_utils = FileServerUtils()
 
 
 def run_experiment(custom_exp_template_file=None, exp_template_file=None, context=None):
@@ -105,3 +108,33 @@ def regress(expected_file_server_path, entity_alias, output_alias,
         return True
     except AssertionError:
         return False
+
+
+def send_data_to_hdfs(file_server_path, hdfs_path, output_file_name=None, clean_data=True):
+    """Send data from file server to HDFS.
+
+    :param file_server_path: The path on the file server where data is present starting from `modules`. E.g. if the
+        URL on file server is http://192.168.192.201/guavus/modules/miq/validation/input/, then
+        "modules/miq/validation/input/" needs to be passed to this method.
+    :type file_server_path: str
+    :param hdfs_path: Path on HDFS where the data needs to be put. Deletes the current contents of the folder.
+    :type hdfs_path: str
+    :param output_file_name: The output file in which the data will be written. Needs to be given only if the
+        destination file with a different name than source needs to be created. Defaults to `None`.
+    :type output_file_name: str
+    :param clean_data: `True`, if the existing data is to be deleted from the `hdfs_path`, else `False`.
+    :type clean_data: bool
+    """
+    hadoop_cli_utils = HadoopCliUtils()
+    tmp_dir = "/tmp/golden_input/"
+    NodeManager.node_obj.execute_command_on_node(hadoop_cli_utils.master_namenode,
+                                                 ShellUtils.remove_and_create_directory(tmp_dir))
+    assert file_server_utils.download_on_remote(
+        NodeManager.node_obj.get_node_ip_by_alias(hadoop_cli_utils.master_namenode), file_server_path,
+        path_to_download=tmp_dir, username=NodeManager.node_obj.nodes[hadoop_cli_utils.master_namenode].username,
+        password=NodeManager.node_obj.nodes[hadoop_cli_utils.master_namenode].password,
+        output_file_name=output_file_name).status is True
+    if clean_data is True:
+        hadoop_cli_utils.remove(hdfs_path, recursive=True)
+    hadoop_cli_utils.create_directories(hdfs_path)
+    assert hadoop_cli_utils.put("%s/*" % tmp_dir, hdfs_path).status is True

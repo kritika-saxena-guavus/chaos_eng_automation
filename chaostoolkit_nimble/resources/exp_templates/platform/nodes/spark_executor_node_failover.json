@@ -1,7 +1,7 @@
 {
 	"version": "1.0.0",
-	"title": "Experiment with killing n number of spark executors for a spark job {{job_name}}.",
-	"description": "The spark executor process/es should get auto-respawned after being killed.",
+	"title": "Experiment with bringing down the spark executor running node when the spark job '{{job_name}}' is running.",
+	"description": "The spark should be able to handle executor failover and no data loss/corruption should be there.",
 	"tags": ["spark", "application"],
 	"controls": [{
 		"name": "spark-related-controls",
@@ -13,6 +13,16 @@
 	"steady-state-hypothesis": {
 		"title": "Job {{job_name}} is up and running on yarn.",
 		"probes": [{
+				"type": "probe",
+				"name": "Check all ambari services are up on the cluster.   ",
+				"tolerance": true,
+				"provider": {
+					"module": "chaostoolkit_nimble.core.utils.ambari_ha_utils",
+					"type": "python",
+					"func": "are_all_services_running"
+				}
+			},
+			{
 			"type": "probe",
 			"name": "Check job {{job_name}} running on yarn.  ",
 			"tolerance": true,
@@ -28,14 +38,13 @@
 	},
 	"method": [{
 		"type": "action",
-		"name": "Kill active spark executors for job {{job_name}}.  ",
+		"name": "Reboot node where spark job {{job_name}} executors are running.    ",
 		"provider": {
-			"module": "chaostoolkit_nimble.core.utils.spark_ha_utils",
+			"module": "chaostoolkit_nimble.core.utils.node_ha_utils",
 			"type": "python",
-			"func": "kill_active_executors",
+			"func": "reboot_spark_executor_node",
 			"arguments": {
-				"job_name": "{{job_name}}",
-				"num_of_exec": "{{ num_of_exec_to_kill|default('1') }}"
+				"job_name": "{{job_name}}"
 			}
 		}
 	}],
