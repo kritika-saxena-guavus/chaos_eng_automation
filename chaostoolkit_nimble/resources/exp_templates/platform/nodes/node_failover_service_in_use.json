@@ -14,7 +14,7 @@
 		}
 	}],
 	"steady-state-hypothesis": {
-		"title": "Check all ambari services are up on the cluster and the all data in a hive table remains intact",
+		"title": "Check all ambari services are up on the cluster. ",
 		"probes": [{
 				"type": "probe",
 				"name": "Check all ambari services are up on the cluster.   ",

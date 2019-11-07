@@ -40,7 +40,7 @@
 			},
 			{
                 "type": "probe",
-                "name": "Check that all the data in a hive table remains intact.   ",
+                "name": "Check that the already present data in a hive table is intact.   ",
                 "tolerance": true,
                 "provider": {
                     "module": "chaostoolkit_nimble.actions.base.flows.chaos_user_actions",

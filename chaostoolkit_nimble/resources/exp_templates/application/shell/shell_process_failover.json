@@ -1,13 +1,13 @@
 {
 	"version": "1.0.0",
-	"title": "Experiment running shell commands on local and remote",
-	"description": "Shell command should get successfully executed on remote using python provider through fabric and on local it should run through process provider",
+	"title": "Experiment will killing a process running on shell",
+	"description": "The shell process should get auto-relaunched upon ungraceful killing",
 	"tags": ["kubernetes"],
   	"controls": [{
         "name": "shell-app-controls",
         "provider": {
             "type": "python",
-            "module": "chaostoolkit_nimble.controllers.extensions.shell_application.control"
+            "module": "chaostoolkit_nimble.controllers.application.shell_app.control"
         }
   }],
 	"steady-state-hypothesis": {

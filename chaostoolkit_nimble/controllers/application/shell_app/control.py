@@ -1,25 +1,12 @@
 from time import sleep
 
 from chaoslib.types import Configuration, \
-    Experiment, Run, Secrets, Activity
-from chaostoolkit_nimble.controllers.base import control
+    Experiment, Secrets
 from logzero import logger
 
+from chaostoolkit_nimble.controllers.base import control
+
 control.configure_control()
-
-
-def after_activity_control(context: Activity, state: Run,
-                           configuration: Configuration = None,
-                           secrets: Secrets = None, **kwargs):
-    """
-    after-control of the activity's execution
-
-    Called by the Chaos Toolkit before the activity is applied. The result of
-    the execution is passed as `state`. See
-    https://docs.chaostoolkit.org/reference/api/journal/#run for more
-    information.
-    """
-    logger.debug("----------------STATE AFTER ACTIVITY:  %s" % state)
 
 
 def before_method_control(context: Experiment,
