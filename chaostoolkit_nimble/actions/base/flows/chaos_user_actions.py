@@ -15,12 +15,12 @@ EXPERIMENTS_BASE_PATH = "%s/tmp/experiments/" % global_constants.DEFAULT_LOCAL_A
 ShellUtils.execute_shell_command(ShellUtils.remove_and_create_directory(EXPERIMENTS_BASE_PATH))
 regression_actions = RegressionActions()
 USER_ACTIONS = None
-file_server_utils = FileServerUtils()
+file_server_ip = global_constants.DEFAULT_FILE_SERVER_IP
+file_server_utils = FileServerUtils(file_server_ip=file_server_ip)
 
 
 def run_experiment(custom_exp_template_file=None, exp_template_file=None, context=None):
     status = None
-    file_server_utils = FileServerUtils()
     journal_path = "%s/journal.json" % global_constants.DEFAULT_LOCAL_ARTIFACTS_PATH
     template_base_dir = "%s/tmp/exp_templates/" % global_constants.DEFAULT_LOCAL_ARTIFACTS_PATH
     ShellUtils.execute_shell_command(ShellUtils.remove_and_create_directory(template_base_dir))
